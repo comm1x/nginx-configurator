@@ -7,13 +7,13 @@ Nginx-configurator is a bash tool for fast managing nginx configs
 Register config
 
 ```
-nginx-configurator reg ./my-project-nginx.conf'
+nginx-configurator reg ./my-project-nginx.conf
 ```
 
 Unregister config by alias
 
 ```
-nginx-configurator unreg my-project-nginx.conf'
+nginx-configurator unreg my-project-nginx.conf
 ```
 
 List all registered configs
