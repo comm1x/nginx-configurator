@@ -1,0 +1,58 @@
+# Nginx-configurator
+# Tool for fast managing nginx configs
+
+case $1 in
+    reg)
+        if [ -z "$2" ]; then
+            echo "Error: No FILE argument supplied"
+            exit 1
+        fi
+
+        if ! [ -f $2 ]; then
+            echo "Error: FILE does not exist"
+            exit 1
+        fi
+
+        real="`pwd $2`/`basename $2`"
+        alias="/etc/nginx/conf.d/`basename $real`.conf"
+
+        if [ -f $alias ]; then
+            echo "Error: Cannot register FILE, because alias already exist: $alias"
+            exit 1
+        fi
+
+        cmd="sudo ln -s $real $alias"
+        echo $cmd
+        `$cmd`
+        ;;
+
+    unreg)
+        if [ -z "$2" ]; then
+            echo "Error: No ALIAS argument supplied"
+            exit 1
+        fi
+
+        alias="/etc/nginx/conf.d/$2.conf"
+        if ! [ -f $alias ]; then
+            echo "Error: No config with specified alias"
+            exit 1
+        fi
+
+        cmd="sudo rm $alias"
+        echo $cmd
+        `$cmd`
+        ;;
+
+    list)
+        ls -lh /etc/nginx/conf.d/ | sed "1 d" | awk '{print $9 " " $10 " " $11}'
+        ;;
+
+    *)
+        echo 'Usage:'
+        echo 'nginx-configurator reg FILE         Register FILE in /etc/nginx/conf.d/*'
+        echo 'nginx-configurator unreg ALIAS      Unregister ALIAS-configuration'
+        echo 'nginx-configurator list             List all registered configs'
+        ;;
+esac
+
+exit 0
